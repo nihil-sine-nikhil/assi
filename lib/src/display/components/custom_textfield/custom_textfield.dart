@@ -51,6 +51,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         Gap(3.h),
         TextFormField(
+          obscuringCharacter: '*',
           focusNode: widget.focusNode,
           controller: widget.controller,
           keyboardType: widget.textInputType,
@@ -73,11 +74,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         child: !obscureText
                             ? Icon(
                                 Icons.visibility_off,
-                                color: Colors.grey.shade400,
+                                color: Colors.grey.shade700,
                               )
                             : Icon(
                                 Icons.visibility,
-                                color: Colors.grey.shade400,
+                                color: Colors.grey.shade700,
                               )),
                   )
                 : null,

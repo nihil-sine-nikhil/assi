@@ -42,12 +42,12 @@ Future<dynamic> titleBottomSheet(
                       ),
                       const Spacer(),
                       CircleAvatar(
-                        backgroundColor: Color(0x246e6d6d),
+                        backgroundColor: Color(0x176e6d6d),
                         child: IconButton(
                             onPressed: () => Navigator.pop(context),
                             icon: const Icon(
                               Icons.close,
-                              size: 20,
+                              size: 22,
                             )),
                       )
                     ],
