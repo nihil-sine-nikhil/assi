@@ -13,10 +13,11 @@ class UsersListScreen extends StatefulWidget {
 
 class _UsersListScreenState extends State<UsersListScreen> {
   final TextEditingController _searchController = TextEditingController();
-
-  List<UserModel> myData = CustomData.mydata;
+  List<UserModel> allList = [];
+  List<UserModel> userList = CustomData.mydata;
   bool isSelectItem = false;
   Map<int, bool> selectedItem = {};
+  bool isLoading = false;
 
   selectAllAtOnceGo() {
     bool isFalseAvailable = selectedItem.containsValue(false);
@@ -24,6 +25,32 @@ class _UsersListScreenState extends State<UsersListScreen> {
     setState(() {
       isSelectItem = selectedItem.containsValue(true);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    isLoading = true;
+
+    setState(() {});
+    allList.clear();
+    allList.addAll(userList);
+    print("42 working");
+    userList.clear();
+    if (_searchController.text.trim().isNotEmpty) {
+      userList.addAll(allList.where((element) => element.name
+          .toLowerCase()!
+          .contains(_searchController.text.toLowerCase())));
+    } else {
+      userList.addAll(allList);
+    }
+    isLoading = false;
+
+    setState(() {});
   }
 
   @override
@@ -99,6 +126,18 @@ class _UsersListScreenState extends State<UsersListScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
               child: TextField(
                 controller: _searchController,
+                onChanged: (v) {
+                  userList.clear();
+                  if (v.isNotEmpty) {
+                    userList.addAll(allList.where((element) => element.name!
+                        .toLowerCase()
+                        .contains(_searchController.text.toLowerCase())));
+                  } else {
+                    userList.addAll(allList);
+                  }
+
+                  setState(() {});
+                },
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 cursorColor: Colors.black,
@@ -120,71 +159,116 @@ class _UsersListScreenState extends State<UsersListScreen> {
             ),
           ),
           Gap(15.h),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: myData.length,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                UserModel data = myData[index];
-                selectedItem?[index] = selectedItem?[index] ?? false;
-                bool? isSelectedData = selectedItem[index];
+          if (userList.isNotEmpty)
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: userList.length,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  UserModel data = userList[index];
+                  selectedItem?[index] = selectedItem?[index] ?? false;
+                  bool? isSelectedData = selectedItem[index];
 
-                return ListTile(
-                  onLongPress: () {
-                    setState(() {
-                      selectedItem[index] = !isSelectedData;
-                      isSelectItem = selectedItem.containsValue(true);
-                    });
-                  },
-                  onTap: () {
-                    if (isSelectItem) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    splashColor: Color(0x1FADADAD),
+                    onLongPress: () {
                       setState(() {
                         selectedItem[index] = !isSelectedData;
                         isSelectItem = selectedItem.containsValue(true);
                       });
-                    } else {
-                      // Open Detail Page
-                    }
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    data.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.sp,
-                      height: 1.2,
+                    },
+                    onTap: () {
+                      if (isSelectItem) {
+                        setState(() {
+                          selectedItem[index] = !isSelectedData;
+                          isSelectItem = selectedItem.containsValue(true);
+                        });
+                      } else {
+                        // Open Detail Page
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 3.0,
+                        vertical: 10.h,
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundColor: Colors.orangeAccent,
+                            backgroundImage: AssetImage(data.profilePic),
+                          ),
+                          Gap(10.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                data.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15.sp,
+                                  height: 1.2,
+                                ),
+                              ),
+                              Text(
+                                data.role,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12.sp,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          _mainUI(
+                            isSelectedData!,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  subtitle: Text(
-                    data.role,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12.sp,
-                      height: 1.2,
-                    ),
-                  ),
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.orangeAccent,
-                    backgroundImage: AssetImage(data.profilePic),
-                  ),
-                  trailing: _mainUI(isSelectedData!, data),
-                );
-              })
+                  );
+                })
+          else if (userList.isEmpty && isLoading == false)
+            Center(
+              child: Text("No Data"),
+            )
+          else
+            Center(child: CircularProgressIndicator()),
         ],
       ),
     );
   }
 
-  Widget _mainUI(bool isSelected, UserModel ourdata) {
-    if (isSelectItem) {
-      return Icon(
-        isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-        color: Theme.of(context).primaryColor,
-      );
-    } else {
-      return Icon(Icons.keyboard_arrow_right);
-    }
+  Widget _mainUI(
+    bool isSelected,
+  ) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 350),
+      transitionBuilder: (Widget child, Animation<double> anim) =>
+          RotationTransition(
+        turns: child.key == const ValueKey('icon1')
+            ? Tween<double>(begin: 0, end: 1).animate(anim)
+            : Tween<double>(begin: 1, end: 0).animate(anim),
+        child: ScaleTransition(
+          scale: anim,
+          child: child,
+        ),
+      ),
+      child: isSelectItem
+          ? Icon(
+              key: const ValueKey('icon1'),
+              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+              color: Theme.of(context).primaryColor,
+            )
+          : Icon(
+              Icons.keyboard_arrow_right,
+              key: const ValueKey('icon2'),
+            ),
+    );
   }
 }
 
