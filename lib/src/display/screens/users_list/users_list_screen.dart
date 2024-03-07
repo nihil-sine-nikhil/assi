@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 import '../../../domain/constants/asset_constants.dart';
+import '../../components/custom_snackbar/custom_snackbar.dart';
 
 class UsersListScreen extends StatefulWidget {
   const UsersListScreen({super.key});
@@ -66,7 +67,12 @@ class _UsersListScreenState extends State<UsersListScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          selectAllAtOnceGo();
+          ScaffoldMessenger.of(context).clearSnackBars();
+          customErrorSnackBarMsg(
+              time: 3,
+              text: 'Login access has been denied successfully',
+              context: context);
+          // selectAllAtOnceGo();
         },
         tooltip: 'Increment',
         child: const Icon(Icons.check),
