@@ -1,5 +1,5 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
-import 'package:assignment/src/display/screens/add_new_user/add_new_user_screen.dart';
+import 'package:assignment/src/display/screens/home/home_screen.dart';
 import 'package:assignment/src/domain/helpers/shared_preference_helper.dart';
 import 'package:assignment/src/domain/repos.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,30 +43,35 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(360, 690),
         builder: (_, child) {
-          return MaterialApp(
-            title: 'Assignment',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primaryColor: Colors.black,
-              scaffoldBackgroundColor: Colors.white,
-              // appBarTheme: AppBarTheme(
-              //   backgroundColor: Colors.white,
-              //   elevation: 0.0, // Remove shadow
-              //   systemOverlayStyle: SystemUiOverlayStyle(
-              //     statusBarColor: Colors.transparent,
-              //     statusBarIconBrightness: Brightness.dark,
-              //   ),
-              // ),
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-              useMaterial3: true,
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ButtonStyle(
-                  splashFactory: InkRipple.splashFactory,
-                  overlayColor: MaterialStateProperty.all(Color(0x8bffffff)),
+          return GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: MaterialApp(
+              title: 'Assignment',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primaryColor: Colors.black,
+                scaffoldBackgroundColor: Colors.white,
+                // appBarTheme: AppBarTheme(
+                //   backgroundColor: Colors.white,
+                //   elevation: 0.0, // Remove shadow
+                //   systemOverlayStyle: SystemUiOverlayStyle(
+                //     statusBarColor: Colors.transparent,
+                //     statusBarIconBrightness: Brightness.dark,
+                //   ),
+                // ),
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+                useMaterial3: true,
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ButtonStyle(
+                    splashFactory: InkRipple.splashFactory,
+                    overlayColor: MaterialStateProperty.all(Color(0x8bffffff)),
+                  ),
                 ),
               ),
+              home: HomeScreen(),
             ),
-            home: AddNewUserScreen(),
           );
         });
   }

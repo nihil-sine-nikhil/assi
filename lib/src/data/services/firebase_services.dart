@@ -19,13 +19,14 @@ class FirebaseServices {
   FirebaseServices._internal();
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _fbStorage = FirebaseStorage.instance;
+  final storageRef = FirebaseStorage.instance.ref();
 
   /// UPLOADING PROFILE PICTURE
   Future<String> storeProfilePic(String ref, File file) async {
-    UploadTask uploadTask = _fbStorage.ref().child(ref).putFile(file);
+    UploadTask uploadTask = storageRef.child(ref).putFile(file);
     TaskSnapshot snapshot = await uploadTask;
     String downloadUrl = await snapshot.ref.getDownloadURL();
+    print('nikhilssss ${downloadUrl}');
     return downloadUrl;
   }
 
@@ -107,11 +108,13 @@ class FirebaseServices {
 
   Future<CustomResponse> addNewUser(
       {required UserModel userModel, File? profilePic}) async {
+    print('nikhil  sdsd${profilePic}');
     try {
       if (profilePic != null) {
         final microsecondsSinceEpoch = DateTime.now().microsecondsSinceEpoch;
         final randomID = microsecondsSinceEpoch % 10000;
-        await storeProfilePic("profilePic/$randomID", profilePic).then((value) {
+        await storeProfilePic("profilePic/$randomID.jpg", profilePic)
+            .then((value) {
           userModel.profilePic = value;
         }).onError((error, stackTrace) {
           logger.e(error);

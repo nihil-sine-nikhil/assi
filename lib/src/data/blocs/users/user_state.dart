@@ -14,6 +14,11 @@ class UserStateFetching extends UserState {
   List<Object> get props => [];
 }
 
+class UserStateLoading extends UserState {
+  @override
+  List<Object> get props => [];
+}
+
 class UserStateLoaded extends UserState {
   const UserStateLoaded(this.usersListResponse);
 

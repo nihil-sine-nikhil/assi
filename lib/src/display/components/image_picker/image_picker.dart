@@ -22,7 +22,7 @@ Future<File?> pickImage(BuildContext context) async {
               onTap: () async {
                 try {
                   final pickedImage = await imagePicker.pickImage(
-                      source: ImageSource.camera, imageQuality: 50);
+                      source: ImageSource.camera, imageQuality: 30);
                   if (pickedImage != null) {
                     image = File(pickedImage.path);
                   }
@@ -55,8 +55,8 @@ Future<File?> pickImage(BuildContext context) async {
             InkWell(
               onTap: () async {
                 try {
-                  final pickedImage =
-                      await imagePicker.pickImage(source: ImageSource.gallery);
+                  final pickedImage = await imagePicker.pickImage(
+                      source: ImageSource.gallery, imageQuality: 30);
                   if (pickedImage != null) {
                     image = File(pickedImage.path);
                   }

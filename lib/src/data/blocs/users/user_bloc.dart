@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:assignment/src/data/models/firestore_response_models/generic_response_model.dart';
 import 'package:assignment/src/domain/repos.dart';
 import 'package:bloc/bloc.dart';
@@ -12,6 +14,7 @@ part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc() : super(UserInitial()) {
     on<UserEventFetchAll>((event, emit) async {
+      emit(UserStateLoading());
       UsersListResponse response = await firebaseServices.fetchUsersList();
       if (response.status) {
         emit(UserStateLoaded(response));
@@ -20,6 +23,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       }
     });
     on<UserEventUpdate>((event, emit) async {
+      emit(UserStateLoading());
       CustomResponse response =
           await firebaseServices.updateUserDetails(userModel: event.userModel);
 
@@ -30,8 +34,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       }
     });
     on<UserEventAddUser>((event, emit) async {
-      CustomResponse response =
-          await firebaseServices.addNewUser(userModel: event.userModel);
+      emit(UserStateLoading());
+
+      CustomResponse response = await firebaseServices.addNewUser(
+          userModel: event.userModel, profilePic: event.profilePic);
 
       if (response.status) {
         emit(UserStateUpdateSuccesful(response));

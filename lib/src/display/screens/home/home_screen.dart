@@ -74,6 +74,7 @@ class HomeScreen extends StatelessWidget {
                           return ListTile(
                             title: Text(data['firstName']),
                             subtitle: Text(data['lastName']),
+                            leading: Image.network(data['profilePic']),
                           );
                         })
                         .toList()

@@ -19,7 +19,8 @@ class UserEventUpdate extends UserEvent {
 
 class UserEventAddUser extends UserEvent {
   final UserModel userModel;
-  const UserEventAddUser({required this.userModel});
+  File? profilePic;
+  UserEventAddUser({required this.userModel, this.profilePic});
 
   @override
   List<Object> get props => [userModel];
