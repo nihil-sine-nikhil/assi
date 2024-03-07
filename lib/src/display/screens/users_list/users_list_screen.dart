@@ -14,8 +14,8 @@ class UsersListScreen extends StatefulWidget {
 
 class _UsersListScreenState extends State<UsersListScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<UserModel> allList = [];
-  List<UserModel> userList = CustomData.mydata;
+  List<UserModelz> allList = [];
+  List<UserModelz> userList = CustomData.mydata;
   bool isSelectItem = false;
   Map<int, bool> selectedItem = {};
   bool isLoading = false;
@@ -193,7 +193,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
                 itemCount: userList.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
-                  UserModel data = userList[index];
+                  UserModelz data = userList[index];
                   selectedItem?[index] = selectedItem?[index] ?? false;
                   bool? isSelectedData = selectedItem[index];
 
@@ -301,44 +301,44 @@ class _UsersListScreenState extends State<UsersListScreen> {
 }
 
 class CustomData {
-  static List<UserModel> mydata = [
-    UserModel(
+  static List<UserModelz> mydata = [
+    UserModelz(
         id: 1, name: 'Tester 1', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 2, name: 'Tester 2', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 4, name: 'Tester 4', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 5, name: 'Tester 5', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 6, name: 'Tester 6', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 1, name: 'Tester 1', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 2, name: 'Tester 2', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 4, name: 'Tester 4', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 5, name: 'Tester 5', role: 'Admin', profilePic: Assets.icons.india),
-    UserModel(
+    UserModelz(
         id: 6, name: 'Tester 6', role: 'Admin', profilePic: Assets.icons.india),
   ];
 }
 
-class UserModel {
+class UserModelz {
   final int id;
   final String name;
   final String role;
   final String profilePic;
-  const UserModel({
+  const UserModelz({
     required this.id,
     required this.name,
     required this.role,
