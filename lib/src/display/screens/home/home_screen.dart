@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                 padding: EdgeInsets.only(top: screenNotch),
                 child: Center(
                   child: Text(
-                    'Add new user',
+                    'Users List',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 17.sp,
