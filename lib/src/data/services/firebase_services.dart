@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../domain/constants/firebase_constants.dart';
 import '../../domain/repos.dart';
+import '../models/firestore_response_models/generic_response_model.dart';
 import '../models/firestore_response_models/users_list_response_model.dart';
 import '../models/users_model.dart';
 
@@ -39,13 +40,13 @@ class FirebaseServices {
           .collection(FirebaseConstants.userCollection)
           .orderBy('firstName', descending: false)
           .get();
+
       logger.f(res.docs);
       for (var doc in res.docs) {
         Map<String, dynamic> data = doc.data();
         var user = UserModel.fromMap(data);
         user.documentID = doc.id;
-
-        usersList.add(user); // Add each KPI to the list
+        usersList.add(user);
       }
       return UsersListResponse(
         status: true,
@@ -58,6 +59,44 @@ class FirebaseServices {
         status: false,
         msg: e.toString(),
         usersList: usersList,
+      );
+    }
+  }
+
+  Future<CustomResponse> addNewUser({required UserModel userModel}) async {
+    try {
+      await firestore.collection(FirebaseConstants.userCollection).add(
+            userModel.toMap(),
+          );
+      return CustomResponse(
+        status: true,
+        msg: 'User added successfully',
+      );
+    } catch (e) {
+      logger.e(e);
+      return CustomResponse(
+        status: false,
+        msg: e.toString(),
+      );
+    }
+  }
+
+  Future<CustomResponse> updateUserDetails(
+      {required UserModel userModel}) async {
+    try {
+      firestore
+          .collection(FirebaseConstants.userCollection)
+          .doc(userModel.documentID)
+          .update(userModel.toMap());
+      return CustomResponse(
+        status: true,
+        msg: "User updated successfully.",
+      );
+    } catch (e) {
+      logger.e(e);
+      return CustomResponse(
+        status: false,
+        msg: e.toString(),
       );
     }
   }

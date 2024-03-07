@@ -5,6 +5,7 @@ class UserModel {
   final String email;
   final String phone;
   final String team;
+  final bool canLogin;
   final String role;
   final String profilePic;
   dynamic createdOn;
@@ -13,6 +14,7 @@ class UserModel {
     this.documentID,
     required this.lastName,
     required this.firstName,
+    required this.canLogin,
     required this.role,
     required this.email,
     required this.phone,
@@ -25,6 +27,7 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       lastName: map['lastName'],
+      canLogin: map['canLogin'],
       firstName: map['firstName'],
       profilePic: map['profilePic'],
       role: map['role'],
@@ -37,6 +40,7 @@ class UserModel {
     return {
       'lastName': lastName,
       'firstName': firstName,
+      'canLogin': canLogin,
       'profilePic': profilePic,
       'role': role,
       'email': email,

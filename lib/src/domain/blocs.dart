@@ -1,3 +1,3 @@
-import '../data/blocs/users/users_bloc.dart';
+import '../data/blocs/users/user_bloc.dart';
 
-UsersBloc usersBloc = UsersBloc();
+UserBloc userBloc = UserBloc();
