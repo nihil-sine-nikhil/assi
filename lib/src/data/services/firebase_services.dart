@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../domain/constants/firebase_constants.dart';
 import '../../domain/repos.dart';
@@ -16,6 +19,15 @@ class FirebaseServices {
   FirebaseServices._internal();
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _fbStorage = FirebaseStorage.instance;
+
+  /// UPLOADING PROFILE PICTURE
+  Future<String> storeProfilePic(String ref, File file) async {
+    UploadTask uploadTask = _fbStorage.ref().child(ref).putFile(file);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
 
   ///user
   Future<bool> checkAdminExist(String email) async {
@@ -93,8 +105,18 @@ class FirebaseServices {
     }
   }
 
-  Future<CustomResponse> addNewUser({required UserModel userModel}) async {
+  Future<CustomResponse> addNewUser(
+      {required UserModel userModel, File? profilePic}) async {
     try {
+      if (profilePic != null) {
+        final microsecondsSinceEpoch = DateTime.now().microsecondsSinceEpoch;
+        final randomID = microsecondsSinceEpoch % 10000;
+        await storeProfilePic("profilePic/$randomID", profilePic).then((value) {
+          userModel.profilePic = value;
+        }).onError((error, stackTrace) {
+          logger.e(error);
+        });
+      }
       await firestore.collection(FirebaseConstants.userCollection).add(
             userModel.toMap(),
           );

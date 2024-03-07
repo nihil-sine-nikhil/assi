@@ -7,7 +7,7 @@ class UserModel {
   final String team;
   final bool canLogin;
   final String role;
-  final String profilePic;
+  String profilePic;
   dynamic createdOn;
   dynamic updatedOn;
   UserModel({
