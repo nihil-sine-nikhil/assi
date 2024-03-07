@@ -34,6 +34,14 @@ class SharedPreferencesHelper {
     return prefs?.getString(SharedPreferenceConstants.name) ?? "";
   }
 
+  static Future<bool?> setFBToken(String token) async {
+    return await prefs?.setString(SharedPreferenceConstants.token, token);
+  }
+
+  static String getFBToken() {
+    return prefs?.getString(SharedPreferenceConstants.token) ?? "";
+  }
+
   static clearSharedPreferences() async {
     prefs?.clear();
   }

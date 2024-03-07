@@ -1,5 +1,7 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
 import 'package:assignment/src/display/screens/users_list/users_list_screen.dart';
+import 'package:assignment/src/domain/helpers/shared_preference_helper.dart';
+import 'package:assignment/src/domain/repos.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await SharedPreferencesHelper.initSharedPrefs();
+
+  await notificationRepo.getToken();
+  notificationRepo.listenToNotification(
+    onSelected: (String value) {},
+  );
+
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
       create: (context) => UserBloc()..add(UserEventFetchAll()),
