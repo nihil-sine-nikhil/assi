@@ -65,8 +65,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     final double screenNotch = MediaQuery.paddingOf(context).top;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: GestureDetector(
+        onTap: () {
           ScaffoldMessenger.of(context).clearSnackBars();
           customErrorSnackBarMsg(
               time: 3,
@@ -74,8 +75,29 @@ class _UsersListScreenState extends State<UsersListScreen> {
               context: context);
           // selectAllAtOnceGo();
         },
-        tooltip: 'Increment',
-        child: const Icon(Icons.check),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 500),
+          width: double.infinity,
+          height: isSelectItem ? 55.h : 0,
+          child: Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5), color: Colors.black),
+              child: Center(
+                child: Text(
+                  'Save changes',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       appBar: PreferredSize(
           preferredSize: Size(screenWidth, 50.h + screenNotch),
@@ -253,7 +275,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
     bool isSelected,
   ) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 500),
       transitionBuilder: (Widget child, Animation<double> anim) =>
           RotationTransition(
         turns: child.key == const ValueKey('icon1')
@@ -280,6 +302,20 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
 class CustomData {
   static List<UserModel> mydata = [
+    UserModel(
+        id: 1, name: 'Tester 1', role: 'Admin', profilePic: Assets.icons.india),
+    UserModel(
+        id: 2, name: 'Tester 2', role: 'Admin', profilePic: Assets.icons.india),
+    UserModel(
+        id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
+    UserModel(
+        id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
+    UserModel(
+        id: 4, name: 'Tester 4', role: 'Admin', profilePic: Assets.icons.india),
+    UserModel(
+        id: 5, name: 'Tester 5', role: 'Admin', profilePic: Assets.icons.india),
+    UserModel(
+        id: 6, name: 'Tester 6', role: 'Admin', profilePic: Assets.icons.india),
     UserModel(
         id: 1, name: 'Tester 1', role: 'Admin', profilePic: Assets.icons.india),
     UserModel(
