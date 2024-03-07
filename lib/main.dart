@@ -1,4 +1,4 @@
-import 'package:assignment/src/display/screens/login/login_screen.dart';
+import 'package:assignment/src/display/screens/users_list/users_list_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
             title: 'Assignment',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+              primaryColor: Colors.black,
               scaffoldBackgroundColor: Colors.white,
               // appBarTheme: AppBarTheme(
               //   backgroundColor: Colors.white,
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
               //     statusBarIconBrightness: Brightness.dark,
               //   ),
               // ),
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
               useMaterial3: true,
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ButtonStyle(
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: LoginScreen(),
+            home: UsersListScreen(),
           );
         });
   }
