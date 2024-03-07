@@ -1,5 +1,5 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
-import 'package:assignment/src/display/screens/users_list/users_list_screen.dart';
+import 'package:assignment/src/display/screens/add_new_user/add_new_user_screen.dart';
 import 'package:assignment/src/domain/helpers/shared_preference_helper.dart';
 import 'package:assignment/src/domain/repos.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: UsersListScreen(),
+            home: AddNewUserScreen(),
           );
         });
   }

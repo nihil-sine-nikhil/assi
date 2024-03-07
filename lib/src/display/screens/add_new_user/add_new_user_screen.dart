@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
 import 'package:assignment/src/data/models/users_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +15,7 @@ import '../../../domain/repos.dart';
 import '../../components/custom_bottom_sheet/custom_bottom_sheet.dart';
 import '../../components/custom_snackbar/custom_snackbar.dart';
 import '../../components/custom_textfield/custom_textfield.dart';
+import '../../components/image_picker/image_picker.dart';
 import '../users_list/users_list_screen.dart';
 
 class AddNewUserScreen extends StatefulWidget {
@@ -29,6 +32,8 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
   final TextEditingController _emailController = TextEditingController();
   String _selectedUserRole = 'Assign to an office';
   String _selectedUserTeam = 'Select a role (Closer, Setter or Manager)';
+  File? image;
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -36,6 +41,11 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     super.dispose();
+  }
+
+  void selectImage() async {
+    image = await pickImage(context);
+    setState(() {});
   }
 
   @override
@@ -158,6 +168,50 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
                 height: 1.2,
               ),
             ),
+            (image == null)
+                ? GestureDetector(
+                    onTap: selectImage,
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.account_circle,
+                          size: 90,
+                        ),
+                        Text(
+                          'Upload',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13.sp,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    children: [
+                      CircleAvatar(
+                          backgroundImage: FileImage(image!),
+                          backgroundColor: Color(0x38868686),
+                          radius: 38),
+                      Gap(7.h),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            image = null;
+                          });
+                        },
+                        child: Text(
+                          'Remove',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13.sp,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
             Gap(15.h),
             Row(
               children: [

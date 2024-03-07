@@ -29,7 +29,6 @@ class NotificationRepo {
 
   listenToNotification({required Function(String value) onSelected}) async {
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print('nikhil herere ${event.data}');
       showNotification(
         notification: event,
         onSelected: onSelected,
@@ -60,8 +59,6 @@ class NotificationRepo {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
     RemoteMessage notification,
   ) async {
-    print('nikhil ccccc  data}');
-
     final BigTextStyleInformation bigTextStyleInformation =
         BigTextStyleInformation(notification.data['message'],
             htmlFormatTitle: true,
