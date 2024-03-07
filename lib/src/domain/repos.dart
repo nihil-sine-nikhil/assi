@@ -2,9 +2,11 @@ import 'package:assignment/src/data/services/notification_repo.dart';
 import 'package:logger/logger.dart';
 
 import '../data/services/firebase_services.dart';
+import '../data/services/server_repo.dart';
 
 FirebaseServices firebaseServices = FirebaseServices();
 NotificationRepo notificationRepo = NotificationRepo();
+ServerRepo serverRepo = ServerRepo();
 var logger = Logger(
   printer: PrettyPrinter(
       methodCount: 2, // Number of method calls to be displayed

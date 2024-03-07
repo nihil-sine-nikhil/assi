@@ -67,7 +67,7 @@ class NotificationRepo {
             htmlFormatTitle: true,
             htmlFormatBigText: true,
             htmlFormatContent: true,
-            contentTitle: "Parangat",
+            contentTitle: notification.data['title'],
             htmlFormatContentTitle: true,
             summaryText: notification.data['title'],
             htmlFormatSummaryText: true);
