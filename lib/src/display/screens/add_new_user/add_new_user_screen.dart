@@ -1,6 +1,5 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
 import 'package:assignment/src/data/models/users_model.dart';
-import 'package:assignment/src/display/screens/home/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +12,7 @@ import '../../../domain/constants/ui_constants.dart';
 import '../../components/custom_bottom_sheet/custom_bottom_sheet.dart';
 import '../../components/custom_snackbar/custom_snackbar.dart';
 import '../../components/custom_textfield/custom_textfield.dart';
+import '../users_list/users_list_screen.dart';
 
 class AddNewUserScreen extends StatefulWidget {
   const AddNewUserScreen({super.key});
@@ -39,6 +39,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userBloc = context.read<UserBloc>();
     final double screenWidth = MediaQuery.sizeOf(context).width;
     final double screenNotch = MediaQuery.paddingOf(context).top;
     return BlocListener<UserBloc, UserState>(
@@ -55,13 +56,14 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
             customErrorSnackBarMsg(
                 time: 2, text: state.customResponse.msg, context: context);
           }
+          userBloc.add(UserEventFetchAll());
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (
                 context,
               ) =>
-                  HomeScreen(),
+                  UsersListScreen(),
             ),
           );
         }
@@ -77,7 +79,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
             onPressed: () {
               print('niisdsid');
               // print('state is ${userBloc.state}');
-              context.read<UserBloc>().add(UserEventAddUser(
+              userBloc.add(UserEventAddUser(
                   userModel: UserModel(
                       phone: _emailController.text.trim(),
                       email: _emailController.text.trim(),

@@ -1,5 +1,5 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
-import 'package:assignment/src/test.dart';
+import 'package:assignment/src/display/screens/users_list/users_list_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +16,7 @@ void main() async {
   );
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
-      create: (context) => UserBloc(),
+      create: (context) => UserBloc()..add(UserEventFetchAll()),
     ),
   ], child: const MyApp()));
 }

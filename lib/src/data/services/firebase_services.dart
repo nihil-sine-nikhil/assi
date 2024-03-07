@@ -33,6 +33,36 @@ class FirebaseServices {
     }
   }
 
+  Future<UsersListResponse> fetchUsersListStream() async {
+    List<UserModel> usersList = [];
+    try {
+      final res = await firestore
+          .collection(FirebaseConstants.userCollection)
+          .snapshots()
+          .listen((event) {
+        for (var doc in event.docs) {
+          Map<String, dynamic> data = doc.data();
+          var user = UserModel.fromMap(data);
+          user.documentID = doc.id;
+          usersList.add(user);
+        }
+      });
+
+      return UsersListResponse(
+        status: true,
+        msg: "Users list fetched successfully.",
+        usersList: usersList,
+      );
+    } catch (e) {
+      logger.e(e);
+      return UsersListResponse(
+        status: false,
+        msg: e.toString(),
+        usersList: usersList,
+      );
+    }
+  }
+
   Future<UsersListResponse> fetchUsersList() async {
     List<UserModel> usersList = [];
     try {
