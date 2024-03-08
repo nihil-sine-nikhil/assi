@@ -45,5 +45,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserStateUpdateFailed(response));
       }
     });
+    on<UserEventUpdateLoginAccess>((event, emit) async {
+      emit(UserStateLoading());
+
+      CustomResponse response = await firebaseServices.disableUsersLoginAccess(
+          documentIds: event.documentIDs, grantAccess: event.grantAccess);
+
+      if (response.status) {
+        emit(UserStateUpdateSuccesful(response));
+      } else {
+        emit(UserStateUpdateFailed(response));
+      }
+    });
   }
 }

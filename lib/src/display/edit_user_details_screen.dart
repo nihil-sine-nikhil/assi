@@ -105,7 +105,7 @@ class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
             ignoring: state is UserStateLoading ? true : false,
             child: Scaffold(
               bottomNavigationBar: AnimatedContainer(
-                duration: Duration(milliseconds: 800),
+                duration: Duration(milliseconds: 500),
                 margin: EdgeInsets.only(
                   bottom: 25.h,
                   left: state is UserStateLoading ? 90.w : 17.w,

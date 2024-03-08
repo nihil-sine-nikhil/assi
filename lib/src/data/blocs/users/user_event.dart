@@ -31,3 +31,15 @@ class UserEventInit extends UserEvent {
   @override
   List<Object> get props => [];
 }
+
+class UserEventUpdateLoginAccess extends UserEvent {
+  final List<String> documentIDs;
+  final bool grantAccess;
+  UserEventUpdateLoginAccess({
+    required this.documentIDs,
+    required this.grantAccess,
+  });
+
+  @override
+  List<Object> get props => [documentIDs, grantAccess];
+}

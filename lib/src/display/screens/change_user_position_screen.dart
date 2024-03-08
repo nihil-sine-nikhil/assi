@@ -193,7 +193,6 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                         UserModel data = widget.usersList[index];
                         selectedItem?[index] = selectedItem?[index] ?? false;
                         bool? isSelectedData = selectedItem[index];
-                        print('nikkass ${data.documentID}');
                         return InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: Color(0x1FADADAD),

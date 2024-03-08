@@ -16,7 +16,7 @@ import '../../components/custom_bottom_sheet/custom_bottom_sheet.dart';
 import '../../components/custom_snackbar/custom_snackbar.dart';
 import '../../components/custom_textfield/custom_textfield.dart';
 import '../../components/image_picker/image_picker.dart';
-import '../users_list/users_list_screen.dart';
+import '../main_screen.dart';
 
 class AddNewUserScreen extends StatefulWidget {
   const AddNewUserScreen({super.key});
@@ -81,7 +81,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
               builder: (
                 context,
               ) =>
-                  UsersListScreen(),
+                  MainScreen(),
             ),
           );
         }
@@ -92,7 +92,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
             ignoring: state is UserStateLoading ? true : false,
             child: Scaffold(
               bottomNavigationBar: AnimatedContainer(
-                duration: Duration(milliseconds: 800),
+                duration: Duration(milliseconds: 500),
                 margin: EdgeInsets.only(
                   bottom: 25.h,
                   left: state is UserStateLoading ? 90.w : 17.w,

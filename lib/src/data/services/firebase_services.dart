@@ -167,4 +167,33 @@ class FirebaseServices {
       );
     }
   }
+
+  Future<CustomResponse> disableUsersLoginAccess({
+    required List<String> documentIds,
+    required bool grantAccess,
+  }) async {
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (final documentId in documentIds) {
+        final docRef = firestore
+            .collection(FirebaseConstants.userCollection)
+            .doc(documentId);
+        batch.update(docRef, {'canLogin': grantAccess ? true : false});
+      }
+
+      await batch.commit();
+
+      return CustomResponse(
+        status: true,
+        msg: 'Login access has been disable successfully',
+      );
+    } catch (e) {
+      logger.e(e);
+      return CustomResponse(
+        status: false,
+        msg: e.toString(),
+      );
+    }
+  }
 }
