@@ -21,9 +21,10 @@ class _DisableLoginAccessScreenState extends State<DisableLoginAccessScreen> {
   List<UserModel> allList = [];
 
   bool isSelectItem = false;
-  Map<int, bool> selectedItem = {};
+  Map<String, bool> selectedItem = {};
   bool isLoading = false;
-
+  List<UserModel> checkedList = [];
+  bool canMultiSelect = false;
   selectAllAtOnceGo() {
     bool isFalseAvailable = selectedItem.containsValue(false);
     selectedItem.updateAll((key, value) => isFalseAvailable);
@@ -199,22 +200,24 @@ class _DisableLoginAccessScreenState extends State<DisableLoginAccessScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         UserModel data = widget.usersList[index];
-                        selectedItem?[index] = selectedItem?[index] ?? false;
-                        bool? isSelectedData = selectedItem[index];
+                        selectedItem?[data.documentID!] =
+                            selectedItem?[data.documentID!] ?? false;
+                        bool? isSelectedData = selectedItem[data.documentID!];
                         print('nikkass ${data.documentID}');
                         return InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: Color(0x1FADADAD),
                           onLongPress: () {
                             setState(() {
-                              selectedItem[index] = !isSelectedData;
+                              selectedItem[data.documentID!] = !isSelectedData;
                               isSelectItem = selectedItem.containsValue(true);
                             });
                           },
                           onTap: () {
                             if (isSelectItem) {
                               setState(() {
-                                selectedItem[index] = !isSelectedData;
+                                selectedItem[data.documentID!] =
+                                    !isSelectedData;
                                 isSelectItem = selectedItem.containsValue(true);
                               });
                             } else {}
