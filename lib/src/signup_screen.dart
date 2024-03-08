@@ -48,6 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             Center(
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -62,9 +63,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-            Gap(10.h),
+            Gap(20.h),
             MaterialButton(
-              onPressed: () async {},
+              onPressed: () {},
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -108,7 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
         padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
         children: [
           Text(
-            'Welcome Here!',
+            'Sign Up!',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 24.sp,
@@ -215,19 +216,14 @@ class MainPage extends StatelessWidget {
           if (snapshot.hasData) {
             return VerifyEmailPage();
           } else {
-            return AuthPage();
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
+            );
           }
         },
       ));
-}
-
-class AuthPage extends StatelessWidget {
-  const AuthPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
 }
 
 class HomePage extends StatelessWidget {

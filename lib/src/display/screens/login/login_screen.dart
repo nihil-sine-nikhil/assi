@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
+import '../../../domain/repos.dart';
+import '../../../signup_screen.dart';
+import '../../components/custom_snackbar/custom_snackbar.dart';
 import '../../components/custom_textfield/custom_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
+  bool isLoading = false;
   @override
   void dispose() {
     _passwordController.dispose();
@@ -40,9 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Center(
               child: GestureDetector(
-                onTap: () {},
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                },
                 child: Text(
-                  'Login with phone number',
+                  'Not a user? Sign Up first',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 17.sp,
@@ -62,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.symmetric(vertical: 11.h),
               color: Colors.black,
               child: Text(
-                'Send invite',
+                'Login with phone',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16.sp,
@@ -97,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
         children: [
           Text(
-            'Welcome back!',
+            'Log In!',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 24.sp,
@@ -128,17 +136,65 @@ class _LoginScreenState extends State<LoginScreen> {
             textInputType: TextInputType.text,
             isObscure: true,
           ),
-          Gap(15.h),
-          Text(
-            'Forgot password?',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              decoration: TextDecoration.underline,
-              fontSize: 13.sp,
-              color: Colors.black87,
+          Gap(20.h),
+          MaterialButton(
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+              if (_emailController.text.trim().isEmpty ||
+                  _passwordController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                customErrorSnackBarMsg(
+                    time: 2,
+                    text: 'Please, enter all the details above',
+                    context: context);
+              } else if (_passwordController.text.trim().length < 6) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                customErrorSnackBarMsg(
+                    time: 2,
+                    text: 'Please, use a longer password',
+                    context: context);
+              } else {
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim());
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MainPage()));
+                } on FirebaseAuthException catch (e) {
+                  logger.e(e);
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  customErrorSnackBarMsg(
+                      time: 2, text: '${e.message}', context: context);
+                }
+              }
+              setState(() {
+                isLoading = false;
+              });
+            },
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(7.0), // Adjust radius as desired
             ),
+            padding: EdgeInsets.symmetric(vertical: 11.h),
+            color: Colors.black,
+            child: isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  )
+                : Text(
+                    'Log In',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.sp,
+                      color: Colors.white,
+                    ),
+                  ),
           ),
-          Gap(3.h),
         ],
       ),
     );
