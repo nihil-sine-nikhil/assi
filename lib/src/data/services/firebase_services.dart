@@ -88,7 +88,6 @@ class FirebaseServices {
       for (var doc in res.docs) {
         Map<String, dynamic> data = doc.data();
         var user = UserModel.fromMap(data);
-        print('nikhil is sis ${doc.id}');
         user.documentID = doc.id;
         usersList.add(user);
       }

@@ -139,6 +139,15 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                     height: 1.2,
                   ),
                 ),
+                Gap(5.h),
+                Text(
+                  'Tap the edit button to update User details.',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                      height: 1.2,
+                      color: Colors.black54),
+                ),
                 Gap(15.h),
                 DecoratedBox(
                   decoration: BoxDecoration(
@@ -191,8 +200,7 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         UserModel data = widget.usersList[index];
-                        selectedItem?[index] = selectedItem?[index] ?? false;
-                        bool? isSelectedData = selectedItem[index];
+
                         return InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: Color(0x1FADADAD),
@@ -257,9 +265,15 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                                   ],
                                 ),
                                 Spacer(),
-                                _mainUI(
-                                  isSelectedData!,
+                                Text(
+                                  'Edit  ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.sp,
+                                    height: 1.2,
+                                  ),
                                 ),
+                                Icon(Icons.edit_note)
                               ],
                             ),
                           ),
@@ -277,34 +291,6 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
         }
         return Scaffold(body: CustomCircularIndicator());
       },
-    );
-  }
-
-  Widget _mainUI(
-    bool isSelected,
-  ) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      transitionBuilder: (Widget child, Animation<double> anim) =>
-          RotationTransition(
-        turns: child.key == const ValueKey('icon1')
-            ? Tween<double>(begin: 0, end: 1).animate(anim)
-            : Tween<double>(begin: 1, end: 0).animate(anim),
-        child: ScaleTransition(
-          scale: anim,
-          child: child,
-        ),
-      ),
-      child: isSelectItem
-          ? Icon(
-              key: const ValueKey('icon1'),
-              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-              color: Theme.of(context).primaryColor,
-            )
-          : Icon(
-              Icons.keyboard_arrow_right,
-              key: const ValueKey('icon2'),
-            ),
     );
   }
 }
