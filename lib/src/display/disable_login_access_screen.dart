@@ -131,7 +131,7 @@ class _DisableLoginAccessScreenState extends State<DisableLoginAccessScreen> {
               padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
               children: [
                 Text(
-                  'Select the user you want to change position for',
+                  'Select the user you want to disable login access',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 24.sp,
@@ -217,9 +217,7 @@ class _DisableLoginAccessScreenState extends State<DisableLoginAccessScreen> {
                                 selectedItem[index] = !isSelectedData;
                                 isSelectItem = selectedItem.containsValue(true);
                               });
-                            } else {
-                              // Open Detail Page
-                            }
+                            } else {}
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
