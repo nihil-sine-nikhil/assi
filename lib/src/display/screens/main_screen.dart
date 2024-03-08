@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../domain/helpers/shared_preference_helper.dart';
+import '../../signup_screen.dart';
 import '../disable_login_access_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -23,6 +25,38 @@ class _MainScreenState extends State<MainScreen> {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
         return Scaffold(
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.only(
+              bottom: 25.h,
+              left: 17.w,
+              right: 17.w,
+            ),
+            child: MaterialButton(
+              onPressed: () async {
+                SharedPreferencesHelper.logout();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignupScreen()),
+                    (route) => false);
+              },
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(7.0), // Adjust radius as desired
+              ),
+              padding: EdgeInsets.symmetric(vertical: 14.h),
+              color: Colors.red,
+              child: Text(
+                'Log Out',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           appBar: PreferredSize(
               preferredSize: Size(screenWidth, 50.h + screenNotch),
               child: SizedBox(
