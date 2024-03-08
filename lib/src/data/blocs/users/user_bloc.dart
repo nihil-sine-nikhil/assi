@@ -28,6 +28,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           userModel: event.userModel, profilePic: event.profilePic);
 
       if (response.status) {
+        serverRepo.sendFCMNotification(
+            title: 'User details updated',
+            message:
+                " ${event.userModel.firstName}'s details is updated successfully.");
         emit(UserStateUpdateSuccesful(response));
       } else {
         emit(UserStateUpdateFailed(response));
@@ -40,6 +44,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           userModel: event.userModel, profilePic: event.profilePic);
 
       if (response.status) {
+        serverRepo.sendFCMNotification(
+            title: 'New User Added',
+            message:
+                '${event.userModel.firstName} is added to your user list.');
         emit(UserStateUpdateSuccesful(response));
       } else {
         emit(UserStateUpdateFailed(response));

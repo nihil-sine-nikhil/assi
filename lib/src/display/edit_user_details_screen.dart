@@ -12,7 +12,6 @@ import '../data/blocs/users/user_bloc.dart';
 import '../data/models/users_model.dart';
 import '../domain/constants/asset_constants.dart';
 import '../domain/constants/ui_constants.dart';
-import '../domain/repos.dart';
 import 'components/custom_bottom_sheet/custom_bottom_sheet.dart';
 import 'components/custom_snackbar/custom_snackbar.dart';
 import 'components/custom_textfield/custom_textfield.dart';
@@ -73,10 +72,6 @@ class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
       listener: (context, state) {
         print('state is ${state}');
         if (state is UserStateUpdateSuccesful) {
-          serverRepo.sendFCMNotification(
-              title: 'User details updated',
-              message:
-                  "${_firstNameController.text.trim()}'s details is updated successfully.");
           print('sxxxxxx ${state}');
           ScaffoldMessenger.of(context).clearSnackBars();
           customSnackBarMsg(
