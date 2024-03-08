@@ -8,3 +8,7 @@ List<String> userTeamList = [
   'IT',
   'Accounts',
 ];
+List<String> loginAccessList = [
+  'Active',
+  'Restricted',
+];

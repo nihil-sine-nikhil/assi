@@ -32,12 +32,14 @@ class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   String _selectedUserRole = 'Assign to an office';
+  String _selectedLoginAccess = loginAccessList.first;
   String _selectedUserTeam = 'Select a role (Closer, Setter or Manager)';
   File? image;
   FocusNode _phoneFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
+    _selectedLoginAccess = widget.user.canLogin ? 'Active' : "Restricted";
     _firstNameController.text = widget.user.firstName;
     _lastNameController.text = widget.user.lastName;
     _phoneController.text = widget.user.phone;
@@ -141,7 +143,9 @@ class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
                               documentID: widget.user.documentID,
                               phone: _phoneController.text.trim(),
                               email: _emailController.text.trim(),
-                              canLogin: true,
+                              canLogin: _selectedLoginAccess == 'Active'
+                                  ? true
+                                  : false,
                               firstName: _firstNameController.text.trim(),
                               lastName: _lastNameController.text.trim(),
                               profilePic: widget.user.profilePic,
@@ -596,6 +600,127 @@ class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
                                     _selectedUserRole == 'Assign to an office'
                                         ? Colors.grey
                                         : Colors.black,
+                                fontSize: 0.017.sh,
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.black54,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Gap(15.h),
+                  Text(
+                    'Login Access',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13.sp,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Gap(3.h),
+                  GestureDetector(
+                    onTap: () {
+                      titleBottomSheet(
+                        context: context,
+                        title: 'Update login access',
+                        widget: StatefulBuilder(
+                            builder: (context, bottomSheetSetState) {
+                          return Column(
+                            children: [
+                              ...loginAccessList.map(
+                                (role) => GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    bottomSheetSetState(() {
+                                      if (_selectedLoginAccess == role) {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      } else {
+                                        _selectedLoginAccess = role;
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      }
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border: Border.all(
+                                              color:
+                                                  _selectedLoginAccess == role
+                                                      ? Colors.black87
+                                                      : Colors.black12,
+                                              width: 1)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10.0, top: 5, bottom: 5),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              role,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 15,
+                                                  color: role == 'Restricted'
+                                                      ? Colors.red
+                                                      : Colors.black),
+                                            ),
+                                            Spacer(),
+                                            IgnorePointer(
+                                              child: Radio(
+                                                activeColor: Colors.black,
+                                                value: role,
+                                                groupValue:
+                                                    _selectedLoginAccess,
+                                                onChanged: (_) {},
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Gap(10.h),
+                            ],
+                          );
+                        }),
+                      );
+                    },
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.black12,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                          vertical: 14,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              _selectedLoginAccess,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: _selectedLoginAccess == 'Restricted'
+                                    ? Colors.red
+                                    : Colors.black,
                                 fontSize: 0.017.sh,
                               ),
                             ),
