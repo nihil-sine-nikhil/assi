@@ -1,4 +1,3 @@
-import 'package:assignment/src/display/screens/verify_otp_screen.dart';
 import 'package:assignment/src/domain/helpers/shared_preference_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import '../../domain/constants/asset_constants.dart';
 import '../../domain/repos.dart';
 import '../../signup_screen.dart';
 import '../components/custom_snackbar/custom_snackbar.dart';
+import 'enter_otp_screen.dart';
 import 'main_screen.dart';
 
 class SignupPhoneScreen extends StatefulWidget {
@@ -199,7 +199,7 @@ class _SignupScreenState extends State<SignupPhoneScreen> {
                             builder: (
                               context,
                             ) =>
-                                VerifyOTPScreen(
+                                EnterOTPScreen(
                               phone: _phoneController.text.trim(),
                               verificationCode: verificationCode,
                             ),

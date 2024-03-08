@@ -96,20 +96,6 @@ class _SignupScreenState extends State<SignupScreen> {
           child: SizedBox(
             width: screenWidth,
             height: 50.h + screenNotch,
-            child: Padding(
-              padding: EdgeInsets.only(top: screenNotch, left: 17.w),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CircleAvatar(
-                    backgroundColor: Color(0x176e6d6d),
-                    child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          size: 22,
-                        )),
-                  )),
-            ),
           )),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
