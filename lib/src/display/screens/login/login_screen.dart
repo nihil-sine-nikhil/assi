@@ -59,25 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Gap(20.h),
-            MaterialButton(
-              onPressed: () {},
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(7.0), // Adjust radius as desired
-              ),
-              padding: EdgeInsets.symmetric(vertical: 11.h),
-              color: Colors.black,
-              child: Text(
-                'Login with phone',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.sp,
-                  color: Colors.white,
-                ),
-              ),
-            ),
           ],
         ),
       ),
