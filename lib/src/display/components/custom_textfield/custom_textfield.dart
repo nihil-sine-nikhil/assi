@@ -9,6 +9,7 @@ class CustomTextField extends StatefulWidget {
     required this.controller,
     this.onChanged,
     this.hint,
+    this.autofocus = false,
     required this.title,
     this.inputFormatters,
     this.focusNode,
@@ -19,6 +20,7 @@ class CustomTextField extends StatefulWidget {
   final void Function(String)? onChanged;
   final String? hint;
   final String title;
+  final bool autofocus;
   final List<TextInputFormatter>? inputFormatters;
   final FocusNode? focusNode;
   final TextInputType textInputType;
@@ -51,6 +53,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         Gap(3.h),
         TextFormField(
+          autofocus: widget.autofocus,
           obscuringCharacter: '*',
           focusNode: widget.focusNode,
           controller: widget.controller,

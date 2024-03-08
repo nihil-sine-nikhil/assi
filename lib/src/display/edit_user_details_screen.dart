@@ -268,6 +268,7 @@ class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
                     children: [
                       Expanded(
                         child: CustomTextField(
+                          autofocus: true,
                           hint: 'John',
                           title: 'First name',
                           controller: _firstNameController,
