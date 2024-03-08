@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../disable_login_access_screen.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -74,6 +76,23 @@ class _MainScreenState extends State<MainScreen> {
                       },
                       child: Text(
                         'Add new user',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17.sp,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DisableLoginAccessScreen(
+                                    usersList:
+                                        state.usersListResponse.usersList)));
+                      },
+                      child: Text(
+                        'Disable Login Access',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17.sp,

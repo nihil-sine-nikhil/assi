@@ -1,23 +1,22 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
+import 'package:assignment/src/display/screens/add_new_user/add_new_user_screen.dart';
 import 'package:assignment/src/display/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../../data/models/users_model.dart';
-import '../edit_user_details_screen.dart';
-import 'add_new_user/add_new_user_screen.dart';
+import '../data/models/users_model.dart';
 
-class ChangeUserPositionScreen extends StatefulWidget {
-  const ChangeUserPositionScreen({super.key, required this.usersList});
+class DisableLoginAccessScreen extends StatefulWidget {
+  const DisableLoginAccessScreen({super.key, required this.usersList});
   final List<UserModel> usersList;
   @override
-  State<ChangeUserPositionScreen> createState() =>
-      _ChangeUserPositionScreenState();
+  State<DisableLoginAccessScreen> createState() =>
+      _DisableLoginAccessScreenState();
 }
 
-class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
+class _DisableLoginAccessScreenState extends State<DisableLoginAccessScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<UserModel> allList = [];
 
@@ -117,7 +116,7 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                           ),
                         ),
                         Text(
-                          'Change user position',
+                          'Disable user login',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 17.sp,
@@ -138,6 +137,15 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                     fontSize: 24.sp,
                     height: 1.2,
                   ),
+                ),
+                Gap(5.h),
+                Text(
+                  'Long press to select multiple users at once.',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                      height: 1.2,
+                      color: Colors.black54),
                 ),
                 Gap(15.h),
                 DecoratedBox(
@@ -197,28 +205,21 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                         return InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: Color(0x1FADADAD),
-                          // onLongPress: () {
-                          //   setState(() {
-                          //     selectedItem[index] = !isSelectedData;
-                          //     isSelectItem = selectedItem.containsValue(true);
-                          //   });
-                          // },
+                          onLongPress: () {
+                            setState(() {
+                              selectedItem[index] = !isSelectedData;
+                              isSelectItem = selectedItem.containsValue(true);
+                            });
+                          },
                           onTap: () {
-                            // if (isSelectItem) {
-                            //   setState(() {
-                            //     selectedItem[index] = !isSelectedData;
-                            //     isSelectItem = selectedItem.containsValue(true);
-                            //   });
-                            // } else {
-                            //   // Open Detail Page
-                            // }
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditUserDetailsScreen(
-                                          user: data,
-                                        )));
+                            if (isSelectItem) {
+                              setState(() {
+                                selectedItem[index] = !isSelectedData;
+                                isSelectItem = selectedItem.containsValue(true);
+                              });
+                            } else {
+                              // Open Detail Page
+                            }
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -247,11 +248,15 @@ class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
                                         height: 1.2,
                                       ),
                                     ),
+                                    Gap(3.w),
                                     Text(
-                                      data.role,
+                                      data.canLogin ? "Active" : "Restricted",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 12.sp,
+                                        color: data.canLogin
+                                            ? Colors.black
+                                            : Colors.red,
                                         height: 1.2,
                                       ),
                                     ),
