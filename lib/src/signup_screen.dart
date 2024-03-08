@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:assignment/src/display/screens/login/login_screen.dart';
+import 'package:assignment/src/domain/repos.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
+import 'display/components/custom_snackbar/custom_snackbar.dart';
 import 'display/components/custom_textfield/custom_textfield.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -57,7 +62,20 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             Gap(20.h),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim());
+                } on FirebaseAuthException catch (e) {
+                  logger.e(e);
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  customErrorSnackBarMsg(
+                      time: 2, text: e.toString(), context: context);
+                }
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainPage()));
+              },
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -137,4 +155,131 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+}
+
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+          body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return VerifyEmailPage();
+          } else {
+            return AuthPage();
+          }
+        },
+      ));
+}
+
+class AuthPage extends StatelessWidget {
+  const AuthPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class VerifyEmailPage extends StatefulWidget {
+  const VerifyEmailPage({super.key});
+
+  @override
+  State<VerifyEmailPage> createState() => _VerifyEmailPageState();
+}
+
+class _VerifyEmailPageState extends State<VerifyEmailPage> {
+  bool isEmailVerified = false;
+  Timer? timer;
+  bool canResendEmail = false;
+  @override
+  void initState() {
+    super.initState();
+    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    if (!isEmailVerified) {
+      sendVerificationEmail();
+      timer = Timer.periodic(Duration(seconds: 2), (_) => checkEmailVerified());
+    }
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  Future checkEmailVerified() async {
+    await FirebaseAuth.instance.currentUser!.reload();
+    setState(() {
+      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    });
+    if (isEmailVerified) timer?.cancel();
+  }
+
+  Future sendVerificationEmail() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      await user.sendEmailVerification();
+      setState(() {
+        canResendEmail = false;
+      });
+      await Future.delayed(Duration(seconds: 5));
+      setState(() {
+        canResendEmail = true;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      customErrorSnackBarMsg(time: 2, text: e.toString(), context: context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => isEmailVerified
+      ? HomePage()
+      : Scaffold(
+          appBar: AppBar(
+            title: Text('Verify Email'),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text('A verification email has been sent to your email'),
+                SizedBox(
+                  height: 24,
+                ),
+                ElevatedButton.icon(
+                  onPressed: canResendEmail ? sendVerificationEmail : null,
+                  icon: Icon(
+                    Icons.email,
+                    size: 32,
+                  ),
+                  label: Text('Resend Email'),
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => FirebaseAuth.instance.signOut(),
+                  icon: Icon(
+                    Icons.email,
+                    size: 32,
+                  ),
+                  label: Text('Sign out'),
+                )
+              ],
+            ),
+          ),
+        );
 }
