@@ -88,6 +88,7 @@ class FirebaseServices {
       for (var doc in res.docs) {
         Map<String, dynamic> data = doc.data();
         var user = UserModel.fromMap(data);
+        print('nikhil is sis ${doc.id}');
         user.documentID = doc.id;
         usersList.add(user);
       }
@@ -137,8 +138,19 @@ class FirebaseServices {
   }
 
   Future<CustomResponse> updateUserDetails(
-      {required UserModel userModel}) async {
+      {required UserModel userModel, File? profilePic}) async {
+    logger.f('nikka ${userModel.documentID}');
     try {
+      if (profilePic != null) {
+        final microsecondsSinceEpoch = DateTime.now().microsecondsSinceEpoch;
+        final randomID = microsecondsSinceEpoch % 10000;
+        await storeProfilePic("profilePic/$randomID.jpg", profilePic)
+            .then((value) {
+          userModel.profilePic = value;
+        }).onError((error, stackTrace) {
+          logger.e(error);
+        });
+      }
       firestore
           .collection(FirebaseConstants.userCollection)
           .doc(userModel.documentID)

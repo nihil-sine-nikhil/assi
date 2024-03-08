@@ -24,8 +24,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
     on<UserEventUpdate>((event, emit) async {
       emit(UserStateLoading());
-      CustomResponse response =
-          await firebaseServices.updateUserDetails(userModel: event.userModel);
+      CustomResponse response = await firebaseServices.updateUserDetails(
+          userModel: event.userModel, profilePic: event.profilePic);
 
       if (response.status) {
         emit(UserStateUpdateSuccesful(response));

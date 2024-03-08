@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:assignment/src/data/blocs/users/user_bloc.dart';
+import 'package:assignment/src/display/screens/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,24 +8,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../../../data/models/users_model.dart';
-import '../../../domain/constants/asset_constants.dart';
-import '../../../domain/constants/ui_constants.dart';
-import '../../../domain/repos.dart';
-import '../../components/custom_bottom_sheet/custom_bottom_sheet.dart';
-import '../../components/custom_snackbar/custom_snackbar.dart';
-import '../../components/custom_textfield/custom_textfield.dart';
-import '../../components/image_picker/image_picker.dart';
-import '../users_list/users_list_screen.dart';
+import '../data/blocs/users/user_bloc.dart';
+import '../data/models/users_model.dart';
+import '../domain/constants/asset_constants.dart';
+import '../domain/constants/ui_constants.dart';
+import '../domain/repos.dart';
+import 'components/custom_bottom_sheet/custom_bottom_sheet.dart';
+import 'components/custom_snackbar/custom_snackbar.dart';
+import 'components/custom_textfield/custom_textfield.dart';
+import 'components/image_picker/image_picker.dart';
 
-class AddNewUserScreen extends StatefulWidget {
-  const AddNewUserScreen({super.key});
+class EditUserDetailsScreen extends StatefulWidget {
+  const EditUserDetailsScreen({super.key, required this.user});
+  final UserModel user;
 
   @override
-  State<AddNewUserScreen> createState() => _AddNewUserScreenState();
+  State<EditUserDetailsScreen> createState() => _EditUserDetailsScreenState();
 }
 
-class _AddNewUserScreenState extends State<AddNewUserScreen> {
+class _EditUserDetailsScreenState extends State<EditUserDetailsScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -34,6 +35,16 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
   String _selectedUserTeam = 'Select a role (Closer, Setter or Manager)';
   File? image;
   FocusNode _phoneFocusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController.text = widget.user.firstName;
+    _lastNameController.text = widget.user.lastName;
+    _phoneController.text = widget.user.phone;
+    _emailController.text = widget.user.email;
+    _selectedUserRole = widget.user.role;
+    _selectedUserTeam = widget.user.team;
+  }
 
   @override
   void dispose() {
@@ -61,9 +72,9 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
         print('state is ${state}');
         if (state is UserStateUpdateSuccesful) {
           serverRepo.sendFCMNotification(
-              title: 'New User Added',
+              title: 'User details updated',
               message:
-                  '${_firstNameController.text.trim()} is added to your user list.');
+                  "${_firstNameController.text.trim()}'s details is updated successfully.");
           print('sxxxxxx ${state}');
           ScaffoldMessenger.of(context).clearSnackBars();
           customSnackBarMsg(
@@ -81,7 +92,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
               builder: (
                 context,
               ) =>
-                  UsersListScreen(),
+                  MainScreen(),
             ),
           );
         }
@@ -101,13 +112,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
                 height: 50.h,
                 child: MaterialButton(
                   onPressed: () {
-                    if (image == null) {
-                      ScaffoldMessenger.of(context).clearSnackBars();
-                      customErrorSnackBarMsg(
-                          time: 2,
-                          text: 'Must select a profile picture',
-                          context: context);
-                    } else if (_firstNameController.text.trim().isEmpty ||
+                    if (_firstNameController.text.trim().isEmpty ||
                         _lastNameController.text.trim().isEmpty ||
                         _emailController.text.trim().isEmpty ||
                         _phoneController.text.trim().isEmpty) {
@@ -131,14 +136,15 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
                           text: 'Must select both a Team and a Role.',
                           context: context);
                     } else {
-                      userBloc.add(UserEventAddUser(
+                      userBloc.add(UserEventUpdate(
                           userModel: UserModel(
+                              documentID: widget.user.documentID,
                               phone: _phoneController.text.trim(),
                               email: _emailController.text.trim(),
                               canLogin: true,
                               firstName: _firstNameController.text.trim(),
                               lastName: _lastNameController.text.trim(),
-                              profilePic: '',
+                              profilePic: widget.user.profilePic,
                               role: _selectedUserRole,
                               team: _selectedUserTeam,
                               createdOn: FieldValue.serverTimestamp(),
@@ -160,7 +166,7 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
                           ),
                         )
                       : Text(
-                          'Send invite',
+                          'Update User',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.sp,
@@ -174,56 +180,52 @@ class _AddNewUserScreenState extends State<AddNewUserScreen> {
                   child: SizedBox(
                     width: screenWidth,
                     height: 50.h + screenNotch,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Color(0x2d858484), width: 1))),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: screenNotch),
-                        child: Center(
-                          child: Text(
-                            'Add new user',
+                    child: Padding(
+                      padding: EdgeInsets.only(top: screenNotch, left: 17.w),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: CircleAvatar(
+                                backgroundColor: Color(0x176e6d6d),
+                                child: IconButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    icon: const Icon(
+                                      Icons.arrow_back,
+                                      size: 22,
+                                    )),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Update user details',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 17.sp,
                             ),
                           ),
-                        ),
+                          Spacer(),
+                        ],
                       ),
                     ),
                   )),
               body: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
                 children: [
-                  Text(
-                    'We will send a welcome email to the new user with a download link to the app.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17.sp,
-                      height: 1.2,
-                    ),
-                  ),
                   Gap(5.h),
-                  Text(
-                    'Once they register you will be able to see them on your user list.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.sp,
-                      height: 1.2,
-                    ),
-                  ),
                   (image == null)
                       ? GestureDetector(
                           onTap: selectImage,
                           child: Column(
                             children: [
-                              Icon(
-                                Icons.account_circle,
-                                size: 90,
-                              ),
+                              CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(widget.user.profilePic),
+                                  backgroundColor: Color(0x38868686),
+                                  radius: 38),
                               Text(
-                                'Upload',
+                                'Change',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 13.sp,

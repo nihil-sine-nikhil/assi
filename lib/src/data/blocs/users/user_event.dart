@@ -11,7 +11,8 @@ class UserEventFetchAll extends UserEvent {
 
 class UserEventUpdate extends UserEvent {
   final UserModel userModel;
-  const UserEventUpdate({required this.userModel});
+  File? profilePic;
+  UserEventUpdate({required this.userModel, this.profilePic});
 
   @override
   List<Object> get props => [userModel];
