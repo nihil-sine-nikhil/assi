@@ -10,6 +10,7 @@ import 'package:gap/gap.dart';
 
 import 'display/components/custom_snackbar/custom_snackbar.dart';
 import 'display/components/custom_textfield/custom_textfield.dart';
+import 'display/screens/signup_phone_screen.dart';
 import 'domain/repos.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -65,7 +66,12 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             Gap(20.h),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignupPhoneScreen()));
+              },
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius:
