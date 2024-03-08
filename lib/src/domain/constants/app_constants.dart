@@ -10,6 +10,13 @@ class AppConstant {
   static const spSecondsPlayed = 'secondsPlayed';
   static const spLastPlayedDocumentID = 'lastPlayedDocumentID';
 
+  static const spUserID = 'userID';
+  static const spIsSignedIn = 'isSignedIn';
+  static const spIsAdmin = 'isAdmin';
+  static const spPhone = 'phone';
+  static const spName = 'name';
+  static const spProfilePic = 'profilePic';
+
   //global variables to manage few stuffs
   static bool isSecPause = false;
   static String _fcmURL = 'https://fcm.googleapis.com/fcm/send';

@@ -53,6 +53,7 @@ dependencies:
   logger:
   image_picker: ^1.0.7
   shimmer: ^3.0.0
+  pinput:
 
 
 

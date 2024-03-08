@@ -1,6 +1,6 @@
 class CustomResponse {
-  final bool status;
-  final String msg;
+  bool status;
+  String msg;
   CustomResponse({
     required this.status,
     required this.msg,
