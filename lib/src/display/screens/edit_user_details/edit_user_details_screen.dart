@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:assignment/src/display/screens/main_screen.dart';
+import 'package:assignment/src/display/screens/home/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,14 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../data/blocs/users/user_bloc.dart';
-import '../data/models/users_model.dart';
-import '../domain/constants/asset_constants.dart';
-import '../domain/constants/ui_constants.dart';
-import 'components/custom_bottom_sheet/custom_bottom_sheet.dart';
-import 'components/custom_snackbar/custom_snackbar.dart';
-import 'components/custom_textfield/custom_textfield.dart';
-import 'components/image_picker/image_picker.dart';
+import '../../../data/blocs/users/user_bloc.dart';
+import '../../../data/models/users_model.dart';
+import '../../../domain/constants/asset_constants.dart';
+import '../../../domain/constants/ui_constants.dart';
+import '../../components/custom_bottom_sheet/custom_bottom_sheet.dart';
+import '../../components/custom_snackbar/custom_snackbar.dart';
+import '../../components/custom_textfield/custom_textfield.dart';
+import '../../components/image_picker/image_picker.dart';
 
 class EditUserDetailsScreen extends StatefulWidget {
   const EditUserDetailsScreen({super.key, required this.user});

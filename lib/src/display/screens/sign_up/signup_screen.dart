@@ -1,3 +1,4 @@
+import 'package:assignment/src/display/screens/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,16 +7,17 @@ import 'package:gap/gap.dart';
 import '../../../domain/repos.dart';
 import '../../components/custom_snackbar/custom_snackbar.dart';
 import '../../components/custom_textfield/custom_textfield.dart';
-import '../sign_up/signup_screen.dart';
+import '../verify_email/verify_email_screen.dart';
+import 'signup_phone_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool isLoading = false;
@@ -47,15 +49,39 @@ class _LoginScreenState extends State<LoginScreen> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
                 child: Text(
-                  'Not a user? Sign Up first',
+                  'Already a user? Login',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 17.sp,
                     color: Colors.black87,
                   ),
+                ),
+              ),
+            ),
+            Gap(20.h),
+            MaterialButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignupPhoneScreen()));
+              },
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(7.0), // Adjust radius as desired
+              ),
+              padding: EdgeInsets.symmetric(vertical: 11.h),
+              color: Colors.black,
+              child: Text(
+                'Sign up with Phone',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -67,26 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SizedBox(
             width: screenWidth,
             height: 50.h + screenNotch,
-            child: Padding(
-              padding: EdgeInsets.only(top: screenNotch, left: 17.w),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CircleAvatar(
-                    backgroundColor: Color(0x176e6d6d),
-                    child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          size: 22,
-                        )),
-                  )),
-            ),
           )),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 10.h),
         children: [
           Text(
-            'Log In!',
+            'Sign Up!',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 24.sp,
@@ -95,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Gap(5.h),
           Text(
-            'Login using your account credentials to access your workspace',
+            'Signup using your email address and password.',
             style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16.sp,
@@ -138,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     context: context);
               } else {
                 try {
-                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim());
                   Navigator.push(
@@ -170,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   )
                 : Text(
-                    'Log In',
+                    'Sign up',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.sp,
@@ -182,4 +194,25 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+class CheckEmailVerificationPage extends StatelessWidget {
+  const CheckEmailVerificationPage({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+          body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return VerifyEmailPage();
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
+            );
+          }
+        },
+      ));
 }

@@ -5,9 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:pinput/pinput.dart';
 
-import '../../domain/repos.dart';
-import '../components/custom_snackbar/custom_snackbar.dart';
-import 'main_screen.dart';
+import '../../../domain/repos.dart';
+import '../../components/custom_snackbar/custom_snackbar.dart';
+import '../home/main_screen.dart';
 
 class EnterOTPScreen extends StatefulWidget {
   const EnterOTPScreen(

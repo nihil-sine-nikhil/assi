@@ -1,24 +1,26 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
-import 'package:assignment/src/display/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../../../domain/constants/asset_constants.dart';
+import '../../../data/models/users_model.dart';
+import '../../components/circular_progress_indicator/circular_progress_indicator.dart';
 import '../add_new_user/add_new_user_screen.dart';
+import '../edit_user_details/edit_user_details_screen.dart';
 
-class UsersListScreen extends StatefulWidget {
-  const UsersListScreen({super.key});
-
+class ChangeUserPositionScreen extends StatefulWidget {
+  const ChangeUserPositionScreen({super.key, required this.usersList});
+  final List<UserModel> usersList;
   @override
-  State<UsersListScreen> createState() => _UsersListScreenState();
+  State<ChangeUserPositionScreen> createState() =>
+      _ChangeUserPositionScreenState();
 }
 
-class _UsersListScreenState extends State<UsersListScreen> {
+class _ChangeUserPositionScreenState extends State<ChangeUserPositionScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<UserModelz> allList = [];
-  List<UserModelz> userList = CustomData.mydata;
+  List<UserModel> allList = [];
+
   bool isSelectItem = false;
   Map<int, bool> selectedItem = {};
   bool isLoading = false;
@@ -34,27 +36,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  init() async {
-    isLoading = true;
-
-    setState(() {});
-    allList.clear();
-    allList.addAll(userList);
-    print("42 working");
-    userList.clear();
-    if (_searchController.text.trim().isNotEmpty) {
-      userList.addAll(allList.where((element) => element.name
-          .toLowerCase()!
-          .contains(_searchController.text.toLowerCase())));
-    } else {
-      userList.addAll(allList);
-    }
-    isLoading = false;
-
-    setState(() {});
+    allList.addAll(widget.usersList);
   }
 
   @override
@@ -157,6 +139,15 @@ class _UsersListScreenState extends State<UsersListScreen> {
                     height: 1.2,
                   ),
                 ),
+                Gap(5.h),
+                Text(
+                  'Tap the edit button to update User details.',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                      height: 1.2,
+                      color: Colors.black54),
+                ),
                 Gap(15.h),
                 DecoratedBox(
                   decoration: BoxDecoration(
@@ -168,14 +159,15 @@ class _UsersListScreenState extends State<UsersListScreen> {
                     child: TextField(
                       controller: _searchController,
                       onChanged: (v) {
-                        userList.clear();
+                        widget.usersList.clear();
                         if (v.isNotEmpty) {
-                          userList.addAll(allList.where((element) => element
-                              .name!
-                              .toLowerCase()
-                              .contains(_searchController.text.toLowerCase())));
+                          widget.usersList.addAll(allList.where((element) =>
+                              element.firstName!.toLowerCase().contains(
+                                  _searchController.text.toLowerCase()) ||
+                              element.lastName!.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())));
                         } else {
-                          userList.addAll(allList);
+                          widget.usersList.addAll(allList);
                         }
 
                         setState(() {});
@@ -201,34 +193,39 @@ class _UsersListScreenState extends State<UsersListScreen> {
                   ),
                 ),
                 Gap(15.h),
-                if (userList.isNotEmpty)
+                if (widget.usersList.isNotEmpty)
                   ListView.builder(
                       shrinkWrap: true,
-                      itemCount: userList.length,
+                      itemCount: widget.usersList.length,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        UserModelz data = userList[index];
-                        selectedItem?[index] = selectedItem?[index] ?? false;
-                        bool? isSelectedData = selectedItem[index];
+                        UserModel data = widget.usersList[index];
 
                         return InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: Color(0x1FADADAD),
-                          onLongPress: () {
-                            setState(() {
-                              selectedItem[index] = !isSelectedData;
-                              isSelectItem = selectedItem.containsValue(true);
-                            });
-                          },
+                          // onLongPress: () {
+                          //   setState(() {
+                          //     selectedItem[index] = !isSelectedData;
+                          //     isSelectItem = selectedItem.containsValue(true);
+                          //   });
+                          // },
                           onTap: () {
-                            if (isSelectItem) {
-                              setState(() {
-                                selectedItem[index] = !isSelectedData;
-                                isSelectItem = selectedItem.containsValue(true);
-                              });
-                            } else {
-                              // Open Detail Page
-                            }
+                            // if (isSelectItem) {
+                            //   setState(() {
+                            //     selectedItem[index] = !isSelectedData;
+                            //     isSelectItem = selectedItem.containsValue(true);
+                            //   });
+                            // } else {
+                            //   // Open Detail Page
+                            // }
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditUserDetailsScreen(
+                                          user: data,
+                                        )));
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -240,7 +237,8 @@ class _UsersListScreenState extends State<UsersListScreen> {
                                 CircleAvatar(
                                   radius: 20,
                                   backgroundColor: Colors.orangeAccent,
-                                  backgroundImage: AssetImage(data.profilePic),
+                                  backgroundImage:
+                                      NetworkImage(data.profilePic),
                                 ),
                                 Gap(10.w),
                                 Column(
@@ -249,7 +247,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      data.name,
+                                      '${data.firstName} ${data.lastName}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 15.sp,
@@ -267,15 +265,21 @@ class _UsersListScreenState extends State<UsersListScreen> {
                                   ],
                                 ),
                                 Spacer(),
-                                _mainUI(
-                                  isSelectedData!,
+                                Text(
+                                  'Edit  ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.sp,
+                                    height: 1.2,
+                                  ),
                                 ),
+                                Icon(Icons.edit_note)
                               ],
                             ),
                           ),
                         );
                       })
-                else if (userList.isEmpty && isLoading == false)
+                else if (widget.usersList.isEmpty && isLoading == false)
                   Center(
                     child: Text("No Data"),
                   )
@@ -289,78 +293,4 @@ class _UsersListScreenState extends State<UsersListScreen> {
       },
     );
   }
-
-  Widget _mainUI(
-    bool isSelected,
-  ) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      transitionBuilder: (Widget child, Animation<double> anim) =>
-          RotationTransition(
-        turns: child.key == const ValueKey('icon1')
-            ? Tween<double>(begin: 0, end: 1).animate(anim)
-            : Tween<double>(begin: 1, end: 0).animate(anim),
-        child: ScaleTransition(
-          scale: anim,
-          child: child,
-        ),
-      ),
-      child: isSelectItem
-          ? Icon(
-              key: const ValueKey('icon1'),
-              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-              color: Theme.of(context).primaryColor,
-            )
-          : Icon(
-              Icons.keyboard_arrow_right,
-              key: const ValueKey('icon2'),
-            ),
-    );
-  }
-}
-
-class CustomData {
-  static List<UserModelz> mydata = [
-    UserModelz(
-        id: 1, name: 'Tester 1', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 2, name: 'Tester 2', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 4, name: 'Tester 4', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 5, name: 'Tester 5', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 6, name: 'Tester 6', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 1, name: 'Tester 1', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 2, name: 'Tester 2', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 3, name: 'Tester 3', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 4, name: 'Tester 4', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 5, name: 'Tester 5', role: 'Admin', profilePic: Assets.icons.india),
-    UserModelz(
-        id: 6, name: 'Tester 6', role: 'Admin', profilePic: Assets.icons.india),
-  ];
-}
-
-class UserModelz {
-  final int id;
-  final String name;
-  final String role;
-  final String profilePic;
-  const UserModelz({
-    required this.id,
-    required this.name,
-    required this.role,
-    required this.profilePic,
-  });
 }

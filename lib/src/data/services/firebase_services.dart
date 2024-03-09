@@ -26,23 +26,36 @@ class FirebaseServices {
     UploadTask uploadTask = storageRef.child(ref).putFile(file);
     TaskSnapshot snapshot = await uploadTask;
     String downloadUrl = await snapshot.ref.getDownloadURL();
-    print('nikhilssss ${downloadUrl}');
     return downloadUrl;
   }
 
-  ///user
-  Future<bool> checkAdminExist(String email) async {
+  /// for disabling Login access for multiple users
+  Future<CustomResponse> disableUsersLoginAccess({
+    required List<String> documentIds,
+    required bool grantAccess,
+  }) async {
     try {
-      var response = await firestore
-          .collection(FirebaseConstants.adminCollection)
-          .where('email', isEqualTo: email)
-          .get();
-      if (response.size > 0) {
-        return true;
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (final documentId in documentIds) {
+        final docRef = firestore
+            .collection(FirebaseConstants.userCollection)
+            .doc(documentId);
+        batch.update(docRef, {'canLogin': grantAccess ? true : false});
       }
-      return false;
+
+      await batch.commit();
+
+      return CustomResponse(
+        status: true,
+        msg: 'Login access has been disable successfully',
+      );
     } catch (e) {
-      return false;
+      logger.e(e);
+      return CustomResponse(
+        status: false,
+        msg: e.toString(),
+      );
     }
   }
 
@@ -76,69 +89,8 @@ class FirebaseServices {
     }
   }
 
-  Future<UsersListResponse> fetchUsersList() async {
-    List<UserModel> usersList = [];
-    try {
-      final QuerySnapshot<Map<String, dynamic>> res = await firestore
-          .collection(FirebaseConstants.userCollection)
-          .orderBy('firstName', descending: false)
-          .get();
-
-      logger.f(res.docs);
-      for (var doc in res.docs) {
-        Map<String, dynamic> data = doc.data();
-        var user = UserModel.fromMap(data);
-        user.documentID = doc.id;
-        usersList.add(user);
-      }
-      return UsersListResponse(
-        status: true,
-        msg: "Users list fetched successfully.",
-        usersList: usersList,
-      );
-    } catch (e) {
-      logger.e(e);
-      return UsersListResponse(
-        status: false,
-        msg: e.toString(),
-        usersList: usersList,
-      );
-    }
-  }
-
-  Future<CustomResponse> addNewUser(
-      {required UserModel userModel, File? profilePic}) async {
-    print('nikhil  sdsd${profilePic}');
-    try {
-      if (profilePic != null) {
-        final microsecondsSinceEpoch = DateTime.now().microsecondsSinceEpoch;
-        final randomID = microsecondsSinceEpoch % 10000;
-        await storeProfilePic("profilePic/$randomID.jpg", profilePic)
-            .then((value) {
-          userModel.profilePic = value;
-        }).onError((error, stackTrace) {
-          logger.e(error);
-        });
-      }
-      await firestore.collection(FirebaseConstants.userCollection).add(
-            userModel.toMap(),
-          );
-      return CustomResponse(
-        status: true,
-        msg: 'User added successfully',
-      );
-    } catch (e) {
-      logger.e(e);
-      return CustomResponse(
-        status: false,
-        msg: e.toString(),
-      );
-    }
-  }
-
   Future<CustomResponse> updateUserDetails(
       {required UserModel userModel, File? profilePic}) async {
-    logger.f('nikka ${userModel.documentID}');
     try {
       if (profilePic != null) {
         final microsecondsSinceEpoch = DateTime.now().microsecondsSinceEpoch;
@@ -167,31 +119,61 @@ class FirebaseServices {
     }
   }
 
-  Future<CustomResponse> disableUsersLoginAccess({
-    required List<String> documentIds,
-    required bool grantAccess,
-  }) async {
+  Future<CustomResponse> addNewUser(
+      {required UserModel userModel, File? profilePic}) async {
     try {
-      final batch = FirebaseFirestore.instance.batch();
-
-      for (final documentId in documentIds) {
-        final docRef = firestore
-            .collection(FirebaseConstants.userCollection)
-            .doc(documentId);
-        batch.update(docRef, {'canLogin': grantAccess ? true : false});
+      if (profilePic != null) {
+        final microsecondsSinceEpoch = DateTime.now().microsecondsSinceEpoch;
+        final randomID = microsecondsSinceEpoch % 10000;
+        await storeProfilePic("profilePic/$randomID.jpg", profilePic)
+            .then((value) {
+          userModel.profilePic = value;
+        }).onError((error, stackTrace) {
+          logger.e(error);
+        });
       }
-
-      await batch.commit();
-
+      await firestore.collection(FirebaseConstants.userCollection).add(
+            userModel.toMap(),
+          );
       return CustomResponse(
         status: true,
-        msg: 'Login access has been disable successfully',
+        msg: 'User added successfully',
       );
     } catch (e) {
       logger.e(e);
       return CustomResponse(
         status: false,
         msg: e.toString(),
+      );
+    }
+  }
+
+  Future<UsersListResponse> fetchUsersList() async {
+    List<UserModel> usersList = [];
+    try {
+      final QuerySnapshot<Map<String, dynamic>> res = await firestore
+          .collection(FirebaseConstants.userCollection)
+          .orderBy('firstName', descending: false)
+          .get();
+
+      logger.f(res.docs);
+      for (var doc in res.docs) {
+        Map<String, dynamic> data = doc.data();
+        var user = UserModel.fromMap(data);
+        user.documentID = doc.id;
+        usersList.add(user);
+      }
+      return UsersListResponse(
+        status: true,
+        msg: "Users list fetched successfully.",
+        usersList: usersList,
+      );
+    } catch (e) {
+      logger.e(e);
+      return UsersListResponse(
+        status: false,
+        msg: e.toString(),
+        usersList: usersList,
       );
     }
   }

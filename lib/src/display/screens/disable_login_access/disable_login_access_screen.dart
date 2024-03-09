@@ -1,14 +1,14 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
 import 'package:assignment/src/display/screens/add_new_user/add_new_user_screen.dart';
-import 'package:assignment/src/display/screens/home/home_screen.dart';
-import 'package:assignment/src/display/screens/main_screen.dart';
+import 'package:assignment/src/display/screens/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../data/models/users_model.dart';
-import 'components/custom_snackbar/custom_snackbar.dart';
+import '../../../data/models/users_model.dart';
+import '../../components/circular_progress_indicator/circular_progress_indicator.dart';
+import '../../components/custom_snackbar/custom_snackbar.dart';
 
 class DisableLoginAccessScreen extends StatefulWidget {
   const DisableLoginAccessScreen({super.key, required this.usersList});

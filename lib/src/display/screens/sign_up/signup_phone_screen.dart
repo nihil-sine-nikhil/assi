@@ -6,13 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../domain/constants/app_constants.dart';
-import '../../domain/constants/asset_constants.dart';
-import '../../domain/repos.dart';
-import '../../signup_screen.dart';
-import '../components/custom_snackbar/custom_snackbar.dart';
-import 'enter_otp_screen.dart';
-import 'main_screen.dart';
+import '../../../domain/constants/app_constants.dart';
+import '../../../domain/constants/asset_constants.dart';
+import '../../../domain/repos.dart';
+import '../../components/custom_snackbar/custom_snackbar.dart';
+import '../enter_otp_screen/enter_otp_screen.dart';
+import '../home/main_screen.dart';
+import 'signup_screen.dart';
 
 class SignupPhoneScreen extends StatefulWidget {
   const SignupPhoneScreen({super.key});
@@ -207,8 +207,10 @@ class _SignupScreenState extends State<SignupPhoneScreen> {
                         );
                       },
                       codeAutoRetrievalTimeout: (verificationCode) {});
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MainPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CheckEmailVerificationPage()));
                 } on FirebaseAuthException catch (e) {
                   logger.e(e);
                   ScaffoldMessenger.of(context).clearSnackBars();

@@ -1,15 +1,15 @@
-import 'package:assignment/src/display/screens/home/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../../data/models/users_model.dart';
-import '../../domain/helpers/shared_preference_helper.dart';
-import '../../signup_screen.dart';
-import '../disable_login_access_screen.dart';
-import 'add_new_user/add_new_user_screen.dart';
-import 'change_user_position_screen.dart';
+import '../../../data/models/users_model.dart';
+import '../../../domain/helpers/shared_preference_helper.dart';
+import '../../components/circular_progress_indicator/circular_progress_indicator.dart';
+import '../add_new_user/add_new_user_screen.dart';
+import '../change_user_position_screen/change_user_position_screen.dart';
+import '../disable_login_access/disable_login_access_screen.dart';
+import '../sign_up/signup_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

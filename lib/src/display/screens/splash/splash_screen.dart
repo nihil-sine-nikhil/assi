@@ -1,6 +1,6 @@
-import 'package:assignment/src/display/screens/main_screen.dart';
+import 'package:assignment/src/display/screens/home/main_screen.dart';
+import 'package:assignment/src/display/screens/sign_up/signup_screen.dart';
 import 'package:assignment/src/domain/helpers/shared_preference_helper.dart';
-import 'package:assignment/src/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,16 +23,12 @@ class _SplashScreenState extends State<SplashScreen> {
       if (isLogin) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  MainScreen()), // Replace with your home page
+          MaterialPageRoute(builder: (context) => MainScreen()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  SignupScreen()), // Replace with your sign-up page
+          MaterialPageRoute(builder: (context) => SignupScreen()),
         );
       }
     });

@@ -1,7 +1,7 @@
 import 'package:assignment/src/data/blocs/users/user_bloc.dart';
+import 'package:assignment/src/display/screens/splash/splash_screen.dart';
 import 'package:assignment/src/domain/helpers/shared_preference_helper.dart';
 import 'package:assignment/src/domain/repos.dart';
-import 'package:assignment/src/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +33,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -53,14 +52,6 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primaryColor: Colors.black,
                 scaffoldBackgroundColor: Colors.white,
-                // appBarTheme: AppBarTheme(
-                //   backgroundColor: Colors.white,
-                //   elevation: 0.0, // Remove shadow
-                //   systemOverlayStyle: SystemUiOverlayStyle(
-                //     statusBarColor: Colors.transparent,
-                //     statusBarIconBrightness: Brightness.dark,
-                //   ),
-                // ),
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
                 useMaterial3: true,
                 elevatedButtonTheme: ElevatedButtonThemeData(
@@ -70,7 +61,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              home: SignupScreen(),
+              home: SplashScreen(),
             ),
           );
         });

@@ -15,7 +15,7 @@ import '../../components/custom_bottom_sheet/custom_bottom_sheet.dart';
 import '../../components/custom_snackbar/custom_snackbar.dart';
 import '../../components/custom_textfield/custom_textfield.dart';
 import '../../components/image_picker/image_picker.dart';
-import '../main_screen.dart';
+import '../home/main_screen.dart';
 
 class AddNewUserScreen extends StatefulWidget {
   const AddNewUserScreen({super.key});
